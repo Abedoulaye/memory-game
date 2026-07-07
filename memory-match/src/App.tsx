@@ -6,18 +6,22 @@ function App() {
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [matchedIndices, setMatchedIndices] = useState<Set<number>>(new Set());
   const [isChecking, setIsChecking] = useState(false);
+  const [moves, setMoves] = useState(0);
+  const [emojis, setEmojis] = useState(() => {
+  const initial = [
+    "🌍", "🌍",
+    "🌙", "🌙",
+    "⭐", "⭐",
+    "☀️", "☀️",
+    "🪐", "🪐",
+    "🚀", "🚀",
+    "🌌", "🌌",
+    "☄️", "☄️"
+  ];
+  return [...initial].sort(() => Math.random() - 0.5);
+});
 
 
-  const emojis: string[] = [
-  "🌍", "🌍",
-  "🌙", "🌙",
-  "⭐", "⭐",
-  "☀️", "☀️",
-  "🪐", "🪐",
-  "🚀", "🚀",
-  "🌌", "🌌",
-  "☄️", "☄️"
-];
 
 
 const handleFlip = (index: number) => {
@@ -31,6 +35,7 @@ const handleFlip = (index: number) => {
 
   if (newFlipped.size === 2){
     setIsChecking(true)
+    setMoves((prev)=> prev + 1)
 
     const [firstIndex, secondIndex] = [...newFlipped]
 
@@ -55,22 +60,47 @@ const handleFlip = (index: number) => {
 
 }
 
+
+const shuffle = () => {
+  setFlippedIndices(new Set());
+  setMatchedIndices(new Set());
+  setIsChecking(false);
+  setEmojis((prev) => [...prev].sort(() => Math.random() - 0.5));
+  setMoves(0)
+};
+
+const isGameWon = matchedIndices.size === emojis.length;
+
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4">
       <h1 className="text-4xl font-bold text-white mb-8 tracking-wide">
         Memory Match
       </h1>
 
-      <div className="flex gap-12 mb-8 text-white text-lg font-semibold">
-        <div className="flex items-center gap-2">
-          <span className="text-yellow-400">⭐</span>
-          <span>Score: 0</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-green-400">✅</span>
-          <span>Matches: 0</span>
-        </div>
+    <div className="flex gap-12 mb-6 text-white text-lg font-semibold">
+      <div className="flex items-center gap-2">
+        <span className="text-yellow-400">🔄</span>
+        <span>Moves: {moves}</span>
       </div>
+      <div className="flex items-center gap-2">
+        <span className="text-green-400">✅</span>
+        <span>Matches: {matchedIndices.size / 2}</span>
+      </div>
+    </div>
+
+    <div className="mb-6 flex flex-col items-center gap-3">
+      {isGameWon && (
+        <div className="text-2xl font-bold text-yellow-300 animate-bounce">
+          🎉 You Win! 🎉
+        </div>
+      )}
+      <button
+        onClick={shuffle}
+        className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg transition-colors cursor-pointer active:scale-95"
+      >
+        {isGameWon ? "Play Again" : "Restart"}
+      </button>
+    </div>
 
       <div className="grid grid-cols-4 gap-3">
         {emojis.map((emoji, index) => {
