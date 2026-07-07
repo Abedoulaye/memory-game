@@ -4,7 +4,7 @@ A space-themed memory card matching game built with React and TypeScript.
 
 ## 🔴 Live Preview
 
-Play the game here: [Live Demo](https:/abedoulaye.github.io/memory-game)
+Play the game here: [Live Demo](https://memory-game-gold-three-60.vercel.app/)
 
 ## 🎮 How to Play
 
